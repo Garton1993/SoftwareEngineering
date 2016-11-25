@@ -855,6 +855,43 @@ bool Notepad_plus::fileClose(BufferID id, int curView)
 	return true;
 }
 
+bool Notepad_plus::fileCloseAllSaved()
+{
+	//Close all docs which have been saved up to date
+	bool isSnapshotMode = NppParameters::getInstance()->getNppGUI().isSnapshotMode();
+	if (bothActive())
+	{
+		//first close all docs in non-current view, which gets closed automatically
+		//Set active tab to the last one closed.
+		activateBuffer(_pNonDocTab->getBufferByIndex(0), otherView());
+		for (int32_t i = static_cast<int32_t>(_pNonDocTab->nbItem()) - 1; i >= 0; i--) 	//close all from right to left
+		{
+			BufferID id = _mainDocTab.getBufferByIndex(i);
+			Buffer * buf = MainFileManager->getBufferByID(id);
+			if (buf->isUntitled() || buf->docLength() == 0)
+				continue;
+			else if (buf->isDirty())
+				continue;
+			else
+				doClose(_pNonDocTab->getBufferByIndex(i), otherView(), isSnapshotMode);
+		}
+	}
+
+	activateBuffer(_pDocTab->getBufferByIndex(0), currentView());
+	for (int32_t i = static_cast<int32_t>(_pDocTab->nbItem()) - 1; i >= 0; i--)	//close all from right to left
+	{
+		BufferID id = _mainDocTab.getBufferByIndex(i);
+		Buffer * buf = MainFileManager->getBufferByID(id);
+		if (buf->isUntitled() || buf->docLength() == 0)
+			continue;
+		else if (buf->isDirty())
+			continue;
+		else
+			doClose(_pDocTab->getBufferByIndex(i), currentView(), isSnapshotMode);
+	}
+
+	return true;
+}
 bool Notepad_plus::fileCloseAll(bool doDeleteBackup, bool isSnapshotMode)
 {
 	//closes all documents, makes the current view the only one visible

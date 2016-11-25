@@ -56,6 +56,7 @@
     #define    IDM_FILE_OPEN_CMD                (IDM_FILE + 20)
 	#define    IDM_FILE_RESTORELASTCLOSEDFILE   (IDM_FILE + 21)
 	#define    IDM_FILE_OPENFOLDERASWORSPACE    (IDM_FILE + 22)
+	#define	   IDM_FILE_CLOSEALL_SAVED			(IDM_FILE + 23)
 // IMPORTANT: If list above is modified, you have to change the following values:
  
 // To be updated if new menu item(s) is (are) added in menu "File"
