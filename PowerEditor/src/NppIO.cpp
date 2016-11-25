@@ -117,7 +117,7 @@ DWORD WINAPI Notepad_plus::monitorFileOnChange(void * params)
 			break;
 		}
 	}
-
+	 
 	// Just for sample purposes. The destructor will
 	// call Terminate() automatically.
 	changes.Terminate();
