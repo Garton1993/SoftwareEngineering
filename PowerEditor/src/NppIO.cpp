@@ -1305,25 +1305,33 @@ bool Notepad_plus::fileSaveSpecific(const generic_string& fileNameToSave)
 
 bool Notepad_plus::fileSaveAll()
 {
-	if (viewVisible(MAIN_VIEW))
+	generic_string msg = TEXT("Proceed to save ALL open unsaved files?");
+	if (::MessageBox(_pPublicInterface->getHSelf(), msg.c_str(), TEXT("Save All"), MB_YESNO | MB_ICONERROR) == IDNO)
 	{
-		for(size_t i = 0; i < _mainDocTab.nbItem(); ++i)
-		{
-			BufferID idToSave = _mainDocTab.getBufferByIndex(i);
-			fileSave(idToSave);
-		}
+		return false;
 	}
+	else
+	{
+		if (viewVisible(MAIN_VIEW))
+		{
+			for (size_t i = 0; i < _mainDocTab.nbItem(); ++i)
+			{
+				BufferID idToSave = _mainDocTab.getBufferByIndex(i);
+				fileSave(idToSave);
+			}
+		}
 
-	if (viewVisible(SUB_VIEW))
-	{
-		for(size_t i = 0; i < _subDocTab.nbItem(); ++i)
+		if (viewVisible(SUB_VIEW))
 		{
-			BufferID idToSave = _subDocTab.getBufferByIndex(i);
-			fileSave(idToSave);
+			for (size_t i = 0; i < _subDocTab.nbItem(); ++i)
+			{
+				BufferID idToSave = _subDocTab.getBufferByIndex(i);
+				fileSave(idToSave);
+			}
 		}
+		checkDocState();
+		return true;
 	}
-	checkDocState();
-	return true;
 }
 
 bool Notepad_plus::fileSaveAs(BufferID id, bool isSaveCopy)
